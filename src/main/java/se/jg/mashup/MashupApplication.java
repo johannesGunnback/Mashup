@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -11,6 +12,7 @@ import java.net.UnknownHostException;
 
 @Slf4j
 @SpringBootApplication
+@ConfigurationPropertiesScan("se.jg.mashup.config")
 public class MashupApplication {
 
 	public static void main(String[] args) throws UnknownHostException {

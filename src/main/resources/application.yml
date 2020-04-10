@@ -4,3 +4,9 @@ server:
 spring:
   profiles:
     active: ${environment:dev}
+
+restapi:
+  musicbrainz-url: http://musicbrainz.org/ws/2
+  wikidata-url: https://www.wikidata.org/w/api.php
+  wikipedia-url: https://en.wikipedia.org/w/api.php
+  coverartarchive-url: http://coverartarchive.org

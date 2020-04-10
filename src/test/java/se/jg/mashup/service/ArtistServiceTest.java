@@ -30,7 +30,7 @@ public class ArtistServiceTest {
         String musicbrainzData = TestDataUtils.readTestDataFile("/testdata/musicbrainz.json");
 
         mockServer = MockRestServiceServer.createServer(restTemplate);
-        mockServer.expect(requestTo("http://musicbrainz.org/ws/2/artist/5b11f4ce-a62d-471e-81fc-a69a8278c7da?fmt=json&inc=url-rels+release-groups"))
+        mockServer.expect(requestTo("http://fake/artist/5b11f4ce-a62d-471e-81fc-a69a8278c7da?fmt=json&inc=url-rels+release-groups"))
                 .andRespond(withSuccess(musicbrainzData, MediaType.APPLICATION_JSON));
     }
 

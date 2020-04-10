@@ -1,0 +1,5 @@
+restapi:
+  musicbrainz-url: http://fake
+  wikidata-url: http://fake
+  wikipedia-url: http://fake
+  coverartarchive-url: http://fake
