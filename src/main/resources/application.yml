@@ -1,1 +1,6 @@
+server:
+  port: 8112
 
+spring:
+  profiles:
+    active: ${environment:dev}
