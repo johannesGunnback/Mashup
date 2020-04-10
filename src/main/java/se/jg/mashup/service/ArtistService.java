@@ -4,20 +4,53 @@ import org.springframework.stereotype.Service;
 import se.jg.mashup.dto.Artist;
 import se.jg.mashup.integration.artist.ArtistRestClient;
 import se.jg.mashup.integration.artist.dto.ArtistResponse;
+import se.jg.mashup.integration.artist.dto.Relation;
+import se.jg.mashup.integration.artist.dto.RelationsType;
+import se.jg.mashup.integration.description.DescriptionRestClient;
+import se.jg.mashup.integration.descriptionid.DescriptionIdLookupRestClient;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ArtistService {
 
     private final ArtistRestClient artistRestClient;
+    private final DescriptionIdLookupRestClient descriptionIdLookupRestClient;
+    private final DescriptionRestClient descriptionRestClient;
 
-    public ArtistService(ArtistRestClient artistRestClient) {
+    public ArtistService(ArtistRestClient artistRestClient, DescriptionIdLookupRestClient descriptionIdLookupRestClient, DescriptionRestClient descriptionRestClient) {
         this.artistRestClient = artistRestClient;
+        this.descriptionIdLookupRestClient = descriptionIdLookupRestClient;
+        this.descriptionRestClient = descriptionRestClient;
     }
 
     public Artist getArtist(String mbid) {
         ArtistResponse detailsForArtist = artistRestClient.getArtist(mbid);
+        String description = getArtistDescription(detailsForArtist.getRelations());
         return Artist.builder()
                 .mbid(detailsForArtist.getId())
+                .description(description)
                 .build();
+    }
+
+    private String getArtistDescription(List<Relation> relationList) {
+        Map<RelationsType, Relation> wikiRelations = relationList.stream()
+                .filter(RelationsType::isOfType)
+                .collect(Collectors.toMap(r -> RelationsType.valueOf(r.getType()), Function.identity()));
+        Relation wikiDataRelation = wikiRelations.get(RelationsType.wikidata);
+        Relation wikipediaRelation = wikiRelations.get(RelationsType.wikipedia);
+        if (wikipediaRelation != null) {
+            //TODO call wikipedia
+            return null;
+        }
+        Optional<String> descriptionId = descriptionIdLookupRestClient.lookupDescriptionId(wikiDataRelation.getUrl().getResourceId());
+        if (descriptionId.isPresent()) {
+            return descriptionRestClient.getDescription(descriptionId.get());
+        }
+        return null;
     }
 }

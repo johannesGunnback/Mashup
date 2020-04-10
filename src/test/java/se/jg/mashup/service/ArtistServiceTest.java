@@ -17,6 +17,9 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @SpringBootTest
 public class ArtistServiceTest {
 
+    public static final String MUSICABRAINZ_URL_MATCH = "http://fake/artist/5b11f4ce-a62d-471e-81fc-a69a8278c7da?fmt=json&inc=url-rels+release-groups";
+    public static final String WIKIDATA_URL_MATCH = "http://fake?action=wbgetentities&ids=Q11649&format=json&props=sitelinks";
+    public static final String WIKIPEDIA_URL_MATCH = "http://fake?action=query&format=json&prop=extracts&exintro=true&redirects=true&titles=Nirvana%20(band)";
     @Autowired
     private ArtistService service;
 
@@ -28,10 +31,13 @@ public class ArtistServiceTest {
     @BeforeEach
     public void setUp() {
         String musicbrainzData = TestDataUtils.readTestDataFile("/testdata/musicbrainz.json");
+        String wikidata = TestDataUtils.readTestDataFile("/testdata/wikidata.json");
+        String wikipedia = TestDataUtils.readTestDataFile("/testdata/wikipedia.json");
 
         mockServer = MockRestServiceServer.createServer(restTemplate);
-        mockServer.expect(requestTo("http://fake/artist/5b11f4ce-a62d-471e-81fc-a69a8278c7da?fmt=json&inc=url-rels+release-groups"))
-                .andRespond(withSuccess(musicbrainzData, MediaType.APPLICATION_JSON));
+        mockServer.expect(requestTo(MUSICABRAINZ_URL_MATCH)).andRespond(withSuccess(musicbrainzData, MediaType.APPLICATION_JSON));
+        mockServer.expect(requestTo(WIKIDATA_URL_MATCH)).andRespond(withSuccess(wikidata, MediaType.APPLICATION_JSON));
+        mockServer.expect(requestTo(WIKIPEDIA_URL_MATCH)).andRespond(withSuccess(wikipedia, MediaType.APPLICATION_JSON));
     }
 
     @Test
@@ -39,6 +45,7 @@ public class ArtistServiceTest {
         Artist artist = service.getArtist("5b11f4ce-a62d-471e-81fc-a69a8278c7da");
 
         assertThat(artist.getMbid()).isEqualTo("5b11f4ce-a62d-471e-81fc-a69a8278c7da");
+        assertThat(artist.getDescription()).isNotEmpty();
     }
 
 }
