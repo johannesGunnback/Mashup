@@ -1,5 +1,6 @@
 package se.jg.mashup.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.jg.mashup.dto.Album;
 import se.jg.mashup.dto.Artist;
@@ -9,15 +10,18 @@ import se.jg.mashup.integration.artist.dto.Relation;
 import se.jg.mashup.integration.artist.dto.RelationsType;
 import se.jg.mashup.integration.artist.dto.ReleaseGroup;
 import se.jg.mashup.integration.coverart.CoverArtRestClient;
+import se.jg.mashup.integration.coverart.dto.CoverArt;
 import se.jg.mashup.integration.description.DescriptionRestClient;
 import se.jg.mashup.integration.descriptionid.DescriptionIdLookupRestClient;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ArtistService {
 
@@ -55,21 +59,34 @@ public class ArtistService {
             return null;
         }
         Optional<String> descriptionId = descriptionIdLookupRestClient.lookupDescriptionId(wikiDataRelation.getUrl().getResourceId());
-        if (descriptionId.isPresent()) {
-            return descriptionRestClient.getDescription(descriptionId.get());
-        }
-        return null;
+        return descriptionId.map(descriptionRestClient::getDescription).orElse(null);
     }
 
     private List<Album> getAlbums(List<ReleaseGroup> releaseGroups) {
         String albumType = "Album";
+        Map<String, String> coverArtImgByMbID = getCoverImageLinks(releaseGroups);
         return releaseGroups.stream()
                 .filter(releaseGroup -> albumType.equalsIgnoreCase(releaseGroup.getPrimaryType()))
                 .map(releaseGroup -> Album.builder()
                         .id(releaseGroup.getId())
                         .title(releaseGroup.getTitle())
-                        .imageLink(coverArtRestClient.getCoverArtLink(releaseGroup.getId())) //TODO see if we can call this async
+                        .imageLink(coverArtImgByMbID.get(releaseGroup.getId()))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private Map<String, String> getCoverImageLinks(List<ReleaseGroup> releaseGroups) {
+        List<CompletableFuture<CoverArt>> imageLinks = releaseGroups.stream()
+                .map(releaseGroup -> coverArtRestClient.getCoverArtLink(releaseGroup.getId()))
+                .collect(Collectors.toList());
+
+        return imageLinks.stream()
+                .map(CompletableFuture::join)
+                .filter(this::isValidCoverArt)
+                .collect(Collectors.toMap(CoverArt::getCoverArtMbid, CoverArt::getImage));
+    }
+
+    private boolean isValidCoverArt(CoverArt coverArt) {
+        return coverArt != null && coverArt.getCoverArtMbid() != null && coverArt.getImage() != null;
     }
 }

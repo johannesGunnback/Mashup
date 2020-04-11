@@ -3,6 +3,7 @@ package se.jg.mashup.integration.coverart;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -14,6 +15,7 @@ import se.jg.mashup.integration.coverart.dto.CoverArt;
 import se.jg.mashup.integration.coverart.dto.CoverArtResponse;
 
 import java.net.URISyntaxException;
+import java.util.concurrent.CompletableFuture;
 
 import static se.jg.mashup.config.CacheConfiguration.CACHE_MANAGER;
 
@@ -27,23 +29,26 @@ public class CoverArtRestClient extends AbstractRestClient {
         super(restTemplate, new EndpointBuilder(URLConfigProperties.getCoverartarchiveUrl()));
     }
 
+    @Async
     @Cacheable(value = "longTerm", key = "'coverArtMbid_' + #coverArtMbid", cacheManager = CACHE_MANAGER)
-    public String getCoverArtLink(String coverArtMbid) {
+    public CompletableFuture<CoverArt> getCoverArtLink(String coverArtMbid) {
         UriComponents uriComponents = endpointBuilder.getBuilder(RELEASE_GROUP_RESOURCE).buildAndExpand(coverArtMbid);
         try {
             CoverArtResponse coverArtResponse = restTemplate.getForObject(uriComponents.toUriString(), CoverArtResponse.class);
             if(coverArtResponse == null || coverArtResponse.getImages().isEmpty()){
                 log.warn("could not find cover art for id: {}", coverArtMbid);
-                return null;
+                return CompletableFuture.completedFuture(new CoverArt(coverArtMbid));
             }
-            return coverArtResponse.getImages().stream().findFirst().orElse(new CoverArt()).getImage();
+            CoverArt coverArt = coverArtResponse.getImages().stream().findFirst().orElse(new CoverArt());
+            coverArt.setCoverArtMbid(coverArtMbid);
+            return CompletableFuture.completedFuture(coverArt);
         } catch (HttpClientErrorException e) {
             if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                 log.warn("could not find cover art for id: {}", coverArtMbid);
-                return null;
+                return CompletableFuture.completedFuture(new CoverArt(coverArtMbid));
             }
             log.error(e.getMessage());
-            throw e;
+            return CompletableFuture.failedFuture(e);
         }
 
     }

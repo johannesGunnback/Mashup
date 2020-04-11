@@ -7,19 +7,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.net.UnknownHostException;
 
 @Slf4j
 @SpringBootApplication
+@EnableAsync
 @ConfigurationPropertiesScan("se.jg.mashup.config")
 public class MashupApplication {
 
-	public static void main(String[] args) throws UnknownHostException {
+	public static void main(String[] args) {
 		startApplication(args);
 	}
 
-	public static void startApplication(String[] args) throws UnknownHostException {
+	public static void startApplication(String[] args) {
 		SpringApplication app = new SpringApplication(MashupApplication.class);
 		app.setBannerMode(Banner.Mode.OFF);
 		ConfigurableApplicationContext configurableApplicationContext = app.run(args);
