@@ -33,8 +33,8 @@ public class MashupApplication {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Access URLs:\n----------------------------------------------------------\n\t")
 				.append("Local: \t\t\thttp://localhost:")
-				.append(port)
-				.append("\n\tSwagger-ui: \thttp://localhost:").append(port).append("/swagger-ui.html\n")
+				.append(port).append("/mashup")
+				.append("\n\tSwagger-ui: \thttp://localhost:").append(port).append("/mashup/swagger-ui.html\n")
 				.append("----------------------------------------------------------");
 		return sb.toString();
 	}
