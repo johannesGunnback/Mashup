@@ -14,9 +14,7 @@ import se.jg.mashup.integration.coverart.dto.CoverArt;
 import se.jg.mashup.integration.description.DescriptionRestClient;
 import se.jg.mashup.integration.descriptionid.DescriptionIdLookupRestClient;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,20 +47,28 @@ public class ArtistService {
     }
 
     private String getArtistDescription(List<Relation> relationList) {
+        if(relationList == null) {
+            return null;
+        }
         Map<RelationsType, Relation> wikiRelations = relationList.stream()
                 .filter(RelationsType::isOfType)
                 .collect(Collectors.toMap(r -> RelationsType.valueOf(r.getType()), Function.identity()));
         Relation wikiDataRelation = wikiRelations.get(RelationsType.wikidata);
         Relation wikipediaRelation = wikiRelations.get(RelationsType.wikipedia);
         if (wikipediaRelation != null) {
-            //TODO call wikipedia
-            return null;
+            return descriptionRestClient.getDescription(wikipediaRelation.getUrl().getResourceId());
         }
-        Optional<String> descriptionId = descriptionIdLookupRestClient.lookupDescriptionId(wikiDataRelation.getUrl().getResourceId());
+        Optional<String> descriptionId = Optional.empty();
+        if(wikiDataRelation != null) {
+            descriptionId = descriptionIdLookupRestClient.lookupDescriptionId(wikiDataRelation.getUrl().getResourceId());
+        }
         return descriptionId.map(descriptionRestClient::getDescription).orElse(null);
     }
 
     private List<Album> getAlbums(List<ReleaseGroup> releaseGroups) {
+        if(releaseGroups == null) {
+            return new ArrayList<>();
+        }
         String albumType = "Album";
         Map<String, String> coverArtImgByMbID = getCoverImageLinks(releaseGroups);
         return releaseGroups.stream()

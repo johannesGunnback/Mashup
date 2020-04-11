@@ -37,15 +37,15 @@ public class CoverArtRestClient extends AbstractRestClient {
             CoverArtResponse coverArtResponse = restTemplate.getForObject(uriComponents.toUriString(), CoverArtResponse.class);
             if(coverArtResponse == null || coverArtResponse.getImages().isEmpty()){
                 log.warn("could not find cover art for id: {}", coverArtMbid);
-                return CompletableFuture.completedFuture(new CoverArt(coverArtMbid));
+                return CompletableFuture.completedFuture(CoverArt.builder().build());
             }
-            CoverArt coverArt = coverArtResponse.getImages().stream().findFirst().orElse(new CoverArt());
+            CoverArt coverArt = coverArtResponse.getImages().stream().findFirst().orElse(CoverArt.builder().build());
             coverArt.setCoverArtMbid(coverArtMbid);
             return CompletableFuture.completedFuture(coverArt);
         } catch (HttpClientErrorException e) {
             if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                 log.warn("could not find cover art for id: {}", coverArtMbid);
-                return CompletableFuture.completedFuture(new CoverArt(coverArtMbid));
+                return CompletableFuture.completedFuture(CoverArt.builder().build());
             }
             log.error(e.getMessage());
             return CompletableFuture.failedFuture(e);

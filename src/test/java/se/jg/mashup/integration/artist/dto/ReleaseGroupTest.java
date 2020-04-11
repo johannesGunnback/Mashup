@@ -8,14 +8,15 @@ public class ReleaseGroupTest {
 
     @Test
     public void shouldGetResourceId() {
-        RelationUrl relationUrl = new RelationUrl();
-        relationUrl.setResource("https://www.wikidata.org/wiki/Q11649");
+        RelationUrl relationUrl = RelationUrl.builder()
+                .resource("https://www.wikidata.org/wiki/Q11649")
+                .build();
         assertThat(relationUrl.getResourceId()).isEqualTo("Q11649");
     }
 
     @Test
     public void testWithNullResourceId() {
-        RelationUrl relationUrl = new RelationUrl();
+        RelationUrl relationUrl = RelationUrl.builder().build();
         assertThat(relationUrl.getResourceId()).isNull();
     }
 }

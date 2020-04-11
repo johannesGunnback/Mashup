@@ -3,60 +3,191 @@ package se.jg.mashup.service;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
-import se.jg.mashup.TestDataUtils;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import se.jg.mashup.dto.Album;
 import se.jg.mashup.dto.Artist;
+import se.jg.mashup.integration.artist.ArtistRestClient;
+import se.jg.mashup.integration.artist.dto.*;
+import se.jg.mashup.integration.coverart.CoverArtRestClient;
+import se.jg.mashup.integration.coverart.dto.CoverArt;
+import se.jg.mashup.integration.description.DescriptionRestClient;
+import se.jg.mashup.integration.descriptionid.DescriptionIdLookupRestClient;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
 public class ArtistServiceTest {
 
-    public static final String MUSICABRAINZ_URL_MATCH = "http://fake/artist/5b11f4ce-a62d-471e-81fc-a69a8278c7da?fmt=json&inc=url-rels+release-groups";
-    public static final String WIKIDATA_URL_MATCH = "http://fake?action=wbgetentities&ids=Q11649&format=json&props=sitelinks";
-    public static final String WIKIPEDIA_URL_MATCH = "http://fake?action=query&format=json&prop=extracts&exintro=true&redirects=true&titles=Nirvana%20(band)";
-    public static final String COVERART_URL_MATCH = "http://fake/release-group/1b022e01-4da6-387b-8658-8678046e4cef";
+    public static final String MBID_1 = "MBID_1";
+    private static final String LINK_ID1 = "LINK_ID1";
+    private static final String DESCRIPTION_ID1 = "DESCRIPTION_ID1";
+    private static final String DESCRIPTION_1 = "DESCRIPTION_1";
+    private static final String COVERART_ID1 = "COVERART_ID1";
+    private static final String IMAGE_LINK1 = "IMAGE_LINK1";
+    private static final String TITLE1 = "TITLE1";
+    @Mock
+    private ArtistRestClient artistRestClient;
+    @Mock
+    private DescriptionIdLookupRestClient descriptionIdLookupRestClient;
+    @Mock
+    private DescriptionRestClient descriptionRestClient;
+    @Mock
+    private CoverArtRestClient coverArtRestClient;
 
-    @Autowired
-    private ArtistService service;
-
-    @Autowired
-    private RestTemplate restTemplate;
-
-    private MockRestServiceServer mockServer;
+    private ArtistService artistService;
 
     @BeforeEach
     public void setUp() {
-        String musicbrainzData = TestDataUtils.readTestDataFile("/testdata/musicbrainz.json");
-        String wikidata = TestDataUtils.readTestDataFile("/testdata/wikidata.json");
-        String wikipedia = TestDataUtils.readTestDataFile("/testdata/wikipedia.json");
-        String coverart = TestDataUtils.readTestDataFile("/testdata/coverart.json");
-
-        mockServer = MockRestServiceServer.createServer(restTemplate);
-        mockServer.expect(requestTo(MUSICABRAINZ_URL_MATCH)).andRespond(withSuccess(musicbrainzData, MediaType.APPLICATION_JSON));
-        mockServer.expect(requestTo(WIKIDATA_URL_MATCH)).andRespond(withSuccess(wikidata, MediaType.APPLICATION_JSON));
-        mockServer.expect(requestTo(WIKIPEDIA_URL_MATCH)).andRespond(withSuccess(wikipedia, MediaType.APPLICATION_JSON));
-        mockServer.expect(requestTo(COVERART_URL_MATCH)).andRespond(withSuccess(coverart, MediaType.APPLICATION_JSON));
+        MockitoAnnotations.initMocks(this);
+        artistService = new ArtistService(artistRestClient, descriptionIdLookupRestClient, descriptionRestClient, coverArtRestClient);
+        when(artistRestClient.getArtist(MBID_1)).thenReturn(ArtistResponse.builder()
+                .id(MBID_1)
+                .releasegroups(Collections.singletonList(ReleaseGroup.builder()
+                        .primaryType("album")
+                        .title(TITLE1)
+                        .id(COVERART_ID1)
+                        .build()))
+                .relations(Collections.singletonList(Relation.builder()
+                        .type(RelationsType.wikidata.name())
+                        .url(RelationUrl.builder()
+                                .resource("/"+ LINK_ID1)
+                                .build())
+                        .build()))
+                .build());
+        when(descriptionIdLookupRestClient.lookupDescriptionId(LINK_ID1)).thenReturn(Optional.of(DESCRIPTION_ID1));
+        when(descriptionRestClient.getDescription(DESCRIPTION_ID1)).thenReturn(DESCRIPTION_1);
+        when(coverArtRestClient.getCoverArtLink(COVERART_ID1)).thenReturn(CompletableFuture.completedFuture(CoverArt.builder()
+                .coverArtMbid(COVERART_ID1)
+                .image(IMAGE_LINK1)
+                .build()));
     }
 
     @Test
-    public void shouldFetchArtist() {
-        Artist artist = service.getArtist("5b11f4ce-a62d-471e-81fc-a69a8278c7da");
-
-        assertThat(artist.getMbid()).isEqualTo("5b11f4ce-a62d-471e-81fc-a69a8278c7da");
-        assertThat(artist.getDescription()).isNotEmpty();
+    public void verifyNormalFlow(){
+        Artist artist = artistService.getArtist(MBID_1);
+        assertThat(artist.getMbid()).isEqualTo(MBID_1);
+        assertThat(artist.getDescription()).isEqualTo(DESCRIPTION_1);
         Assertions.assertThat(artist.getAlbums())
                 .extracting(Album::getId, Album::getTitle, Album::getImageLink)
-                .containsOnly(tuple("1b022e01-4da6-387b-8658-8678046e4cef", "Nevermind", "http://coverartarchive.org/release/a146429a-cedc-3ab0-9e41-1aaf5f6cdc2d/3012495605.jpg"));
+                .containsOnly(tuple(COVERART_ID1, TITLE1, IMAGE_LINK1));
 
     }
 
+    @Test
+    public void verifyWikipediaDirectLinkFlow(){
+        when(artistRestClient.getArtist(MBID_1)).thenReturn(ArtistResponse.builder()
+                .id(MBID_1)
+                .releasegroups(Collections.singletonList(ReleaseGroup.builder()
+                        .primaryType("album")
+                        .title(TITLE1)
+                        .id(COVERART_ID1)
+                        .build()))
+                .relations(Collections.singletonList(Relation.builder()
+                        .type(RelationsType.wikipedia.name())
+                        .url(RelationUrl.builder()
+                                .resource("/"+ DESCRIPTION_ID1)
+                                .build())
+                        .build()))
+                .build());
+
+        Artist artist = artistService.getArtist(MBID_1);
+        verifyNoInteractions(descriptionIdLookupRestClient);
+        assertThat(artist.getMbid()).isEqualTo(MBID_1);
+        assertThat(artist.getDescription()).isEqualTo(DESCRIPTION_1);
+        Assertions.assertThat(artist.getAlbums())
+                .extracting(Album::getId, Album::getTitle, Album::getImageLink)
+                .containsOnly(tuple(COVERART_ID1, TITLE1, IMAGE_LINK1));
+
+    }
+
+    @Test
+    public void noRelationsShouldBeOk() {
+        when(artistRestClient.getArtist(MBID_1)).thenReturn(ArtistResponse.builder()
+                .id(MBID_1)
+                .releasegroups(Collections.singletonList(ReleaseGroup.builder()
+                        .primaryType("album")
+                        .title(TITLE1)
+                        .id(COVERART_ID1)
+                        .build()))
+                .build());
+
+        Artist artist = artistService.getArtist(MBID_1);
+
+        verifyNoInteractions(descriptionIdLookupRestClient);
+        verifyNoInteractions(descriptionRestClient);
+        assertThat(artist.getMbid()).isEqualTo(MBID_1);
+        assertThat(artist.getDescription()).isNull();
+        Assertions.assertThat(artist.getAlbums())
+                .extracting(Album::getId, Album::getTitle, Album::getImageLink)
+                .containsOnly(tuple(COVERART_ID1, TITLE1, IMAGE_LINK1));
+    }
+
+    @Test
+    public void emptyRelationsShouldBeOk() {
+        when(artistRestClient.getArtist(MBID_1)).thenReturn(ArtistResponse.builder()
+                .id(MBID_1)
+                .relations(new ArrayList<>())
+                .releasegroups(Collections.singletonList(ReleaseGroup.builder()
+                        .primaryType("album")
+                        .title(TITLE1)
+                        .id(COVERART_ID1)
+                        .build()))
+                .build());
+
+        Artist artist = artistService.getArtist(MBID_1);
+
+        verifyNoInteractions(descriptionIdLookupRestClient);
+        verifyNoInteractions(descriptionRestClient);
+        assertThat(artist.getMbid()).isEqualTo(MBID_1);
+        assertThat(artist.getDescription()).isNull();
+        Assertions.assertThat(artist.getAlbums())
+                .extracting(Album::getId, Album::getTitle, Album::getImageLink)
+                .containsOnly(tuple(COVERART_ID1, TITLE1, IMAGE_LINK1));
+    }
+
+    @Test
+    public void noReleaseGroupsShouldBeOK(){
+        when(artistRestClient.getArtist(MBID_1)).thenReturn(ArtistResponse.builder()
+                .id(MBID_1)
+                .relations(Collections.singletonList(Relation.builder()
+                        .type(RelationsType.wikipedia.name())
+                        .url(RelationUrl.builder()
+                                .resource("/"+ DESCRIPTION_ID1)
+                                .build())
+                        .build()))
+                .build());
+
+        Artist artist = artistService.getArtist(MBID_1);
+        verifyNoInteractions(descriptionIdLookupRestClient);
+        verifyNoInteractions(coverArtRestClient);
+        assertThat(artist.getMbid()).isEqualTo(MBID_1);
+        assertThat(artist.getDescription()).isEqualTo(DESCRIPTION_1);
+    }
+
+    @Test
+    public void emptyReleaseGroupsShouldBeOK(){
+        when(artistRestClient.getArtist(MBID_1)).thenReturn(ArtistResponse.builder()
+                .id(MBID_1)
+                .releasegroups(new ArrayList<>())
+                .relations(Collections.singletonList(Relation.builder()
+                        .type(RelationsType.wikipedia.name())
+                        .url(RelationUrl.builder()
+                                .resource("/"+ DESCRIPTION_ID1)
+                                .build())
+                        .build()))
+                .build());
+
+        Artist artist = artistService.getArtist(MBID_1);
+        verifyNoInteractions(descriptionIdLookupRestClient);
+        verifyNoInteractions(coverArtRestClient);
+        assertThat(artist.getMbid()).isEqualTo(MBID_1);
+        assertThat(artist.getDescription()).isEqualTo(DESCRIPTION_1);
+    }
 }

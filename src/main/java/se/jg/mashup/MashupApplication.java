@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
 
 @Slf4j
 @SpringBootApplication
-@EnableAsync
+@EnableAsync // Could fiddle with executor settings to ramp up performance but default settings is working fine
 @ConfigurationPropertiesScan("se.jg.mashup.config")
 public class MashupApplication {
 

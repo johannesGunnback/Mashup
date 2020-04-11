@@ -1,0 +1,471 @@
+{
+  "disambiguation": "Motown soul vocal group",
+  "ipis": [],
+  "end_area": null,
+  "gender": null,
+  "begin_area": {
+    "name": "Detroit",
+    "id": "b03ff310-d8e2-45cf-9455-769f76641eb2",
+    "disambiguation": "",
+    "sort-name": "Detroit"
+  },
+  "relations": [
+    {
+      "target-type": "url",
+      "source-credit": "",
+      "begin": null,
+      "attributes": [],
+      "direction": "forward",
+      "target-credit": "",
+      "ended": false,
+      "type-id": "6b3e3c85-0002-4f34-aca6-80ace0d7e846",
+      "attribute-ids": {},
+      "attribute-values": {},
+      "url": {
+        "id": "5b8cf64c-866a-4c81-ba4a-7f9f191d1dd4",
+        "resource": "https://www.allmusic.com/artist/mn0000569685"
+      },
+      "end": null,
+      "type": "allmusic"
+    },
+    {
+      "source-credit": "",
+      "target-type": "url",
+      "ended": false,
+      "target-credit": "",
+      "direction": "forward",
+      "attributes": [],
+      "begin": null,
+      "type": "BBC Music page",
+      "end": null,
+      "url": {
+        "id": "333cd5bb-87f0-4e55-9c5d-9bdbd427b7e7",
+        "resource": "https://www.bbc.co.uk/music/artists/d8df96ae-8fcf-4997-b3e6-e5d1aaf0f69e"
+      },
+      "type-id": "d028a975-000c-4525-9333-d3c8425e4b54",
+      "attribute-ids": {},
+      "attribute-values": {}
+    },
+    {
+      "target-type": "url",
+      "source-credit": "",
+      "type-id": "04a5b104-a4c2-4bac-99a1-7b837c37d9e4",
+      "attribute-ids": {},
+      "attribute-values": {},
+      "url": {
+        "id": "b4b60e58-cce7-4498-878f-453da9c3856c",
+        "resource": "https://www.discogs.com/artist/28332"
+      },
+      "end": null,
+      "type": "discogs",
+      "begin": null,
+      "attributes": [],
+      "direction": "forward",
+      "target-credit": "",
+      "ended": false
+    },
+    {
+      "attribute-ids": {},
+      "type-id": "769085a1-c2f7-4c24-a532-2375a77693bd",
+      "attribute-values": {},
+      "end": null,
+      "type": "free streaming",
+      "url": {
+        "resource": "https://open.spotify.com/artist/3RwQ26hR2tJtA8F9p2n7jG",
+        "id": "8948d889-a761-4402-8951-bfadb69e4dbc"
+      },
+      "direction": "forward",
+      "attributes": [],
+      "begin": null,
+      "ended": false,
+      "target-credit": "",
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "direction": "forward",
+      "attributes": [],
+      "begin": null,
+      "ended": false,
+      "target-credit": "",
+      "attribute-ids": {},
+      "type-id": "769085a1-c2f7-4c24-a532-2375a77693bd",
+      "attribute-values": {},
+      "type": "free streaming",
+      "end": null,
+      "url": {
+        "id": "ad660428-1ff2-4b28-9f19-c514f5eee8ce",
+        "resource": "http://www.pandora.com/temptations"
+      },
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "end": null,
+      "type": "free streaming",
+      "url": {
+        "id": "02cd3a3a-4f4d-4061-9634-7de3afc72111",
+        "resource": "http://www.staimusic.com/en/bands/the-temptations_4650.html"
+      },
+      "attribute-ids": {},
+      "attribute-values": {},
+      "type-id": "769085a1-c2f7-4c24-a532-2375a77693bd",
+      "ended": false,
+      "target-credit": "",
+      "attributes": [],
+      "direction": "forward",
+      "begin": null,
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "url": {
+        "id": "88400a2f-208b-4194-9e6a-3cc6b38d14ed",
+        "resource": "https://www.imdb.com/name/nm1100552/"
+      },
+      "type": "IMDb",
+      "end": null,
+      "attribute-values": {},
+      "attribute-ids": {},
+      "type-id": "94c8b0cc-4477-4106-932c-da60e63de61c",
+      "target-credit": "",
+      "ended": false,
+      "begin": null,
+      "direction": "forward",
+      "attributes": [],
+      "target-type": "url",
+      "source-credit": ""
+    },
+    {
+      "ended": false,
+      "target-credit": "",
+      "direction": "forward",
+      "attributes": [],
+      "begin": null,
+      "end": null,
+      "type": "lyrics",
+      "url": {
+        "resource": "http://muzikum.eu/en/122-5747/the-temptations/lyrics.html",
+        "id": "e48a765d-4b5a-4e2b-af84-8767588eaa12"
+      },
+      "attribute-ids": {},
+      "type-id": "e4d73442-3762-45a8-905c-401da65544ed",
+      "attribute-values": {},
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "attribute-ids": {},
+      "type-id": "fe33d22f-c3b0-4d68-bd53-a856badf2b15",
+      "attribute-values": {},
+      "end": null,
+      "type": "official homepage",
+      "url": {
+        "id": "5028caad-3d6f-4f94-9b09-8f7f65485b50",
+        "resource": "https://www.temptationsofficial.com/"
+      },
+      "attributes": [],
+      "direction": "forward",
+      "begin": null,
+      "ended": false,
+      "target-credit": "",
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "source-credit": "",
+      "target-type": "url",
+      "attributes": [],
+      "direction": "forward",
+      "begin": null,
+      "ended": false,
+      "target-credit": "",
+      "attribute-ids": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55",
+      "attribute-values": {},
+      "end": null,
+      "type": "other databases",
+      "url": {
+        "resource": "http://id.loc.gov/authorities/names/n87111409",
+        "id": "2fbe523d-c39a-45ed-ac65-cc3bce063e58"
+      }
+    },
+    {
+      "begin": null,
+      "direction": "forward",
+      "attributes": [],
+      "target-credit": "",
+      "ended": false,
+      "attribute-ids": {},
+      "attribute-values": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55",
+      "url": {
+        "id": "a7b9f3f2-1111-478a-8077-79fdc39a491f",
+        "resource": "http://musicmoz.org/Bands_and_Artists/T/Temptations,_The/"
+      },
+      "type": "other databases",
+      "end": null,
+      "target-type": "url",
+      "source-credit": ""
+    },
+    {
+      "target-type": "url",
+      "source-credit": "",
+      "target-credit": "",
+      "ended": false,
+      "begin": null,
+      "direction": "forward",
+      "attributes": [],
+      "url": {
+        "id": "92ee4d9b-2302-4f9c-b981-80da6503a2f5",
+        "resource": "https://catalogue.bnf.fr/ark:/12148/cb139069738"
+      },
+      "type": "other databases",
+      "end": null,
+      "attribute-ids": {},
+      "attribute-values": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55"
+    },
+    {
+      "target-type": "url",
+      "source-credit": "",
+      "url": {
+        "resource": "https://d-nb.info/gnd/5064631-X",
+        "id": "17238a32-3694-44e0-acc1-29fe5ae7f5f9"
+      },
+      "type": "other databases",
+      "end": null,
+      "attribute-values": {},
+      "attribute-ids": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55",
+      "target-credit": "",
+      "ended": false,
+      "begin": null,
+      "attributes": [],
+      "direction": "forward"
+    },
+    {
+      "attributes": [],
+      "direction": "forward",
+      "begin": null,
+      "ended": false,
+      "target-credit": "",
+      "attribute-ids": {},
+      "attribute-values": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55",
+      "type": "other databases",
+      "end": null,
+      "url": {
+        "resource": "https://ibdb.com/person.php?id=90202",
+        "id": "f8905ee9-a190-4bcc-ba38-cebbec407267"
+      },
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "target-type": "url",
+      "source-credit": "",
+      "begin": null,
+      "direction": "forward",
+      "attributes": [],
+      "target-credit": "",
+      "ended": false,
+      "attribute-ids": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55",
+      "attribute-values": {},
+      "url": {
+        "id": "e3da1e99-3d53-43f1-8373-c017c9a22eb2",
+        "resource": "https://nla.gov.au/nla.party-1172561"
+      },
+      "end": null,
+      "type": "other databases"
+    },
+    {
+      "source-credit": "",
+      "target-type": "url",
+      "attribute-values": {},
+      "attribute-ids": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55",
+      "end": null,
+      "type": "other databases",
+      "url": {
+        "resource": "https://openlibrary.org/works/OL2993484A",
+        "id": "75ab0226-34ed-4d9f-891c-cb6276bdb6f8"
+      },
+      "direction": "forward",
+      "attributes": [],
+      "begin": null,
+      "ended": false,
+      "target-credit": ""
+    },
+    {
+      "attribute-values": {},
+      "attribute-ids": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55",
+      "type": "other databases",
+      "end": null,
+      "url": {
+        "id": "b2cdd863-c500-4cf9-ad7b-cf27ea54b753",
+        "resource": "https://rateyourmusic.com/artist/the_temptations"
+      },
+      "direction": "forward",
+      "attributes": [],
+      "begin": null,
+      "ended": false,
+      "target-credit": "",
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "ended": false,
+      "target-credit": "",
+      "direction": "forward",
+      "attributes": [],
+      "begin": null,
+      "type": "other databases",
+      "end": null,
+      "url": {
+        "resource": "https://www.worldcat.org/identities/lccn-n87111409",
+        "id": "ebabc249-261e-42bf-a8e0-05384918160a"
+      },
+      "attribute-ids": {},
+      "attribute-values": {},
+      "type-id": "d94fb61c-fa20-4e3c-a19a-71a949fb2c55",
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "attribute-ids": {},
+      "type-id": "99429741-f3f6-484b-84f8-23af51991770",
+      "attribute-values": {},
+      "type": "social network",
+      "end": null,
+      "url": {
+        "resource": "https://twitter.com/thetemptations",
+        "id": "579ec29b-5fd5-42b8-b67f-0bd954425bd0"
+      },
+      "direction": "forward",
+      "attributes": [],
+      "begin": null,
+      "ended": false,
+      "target-credit": "",
+      "source-credit": "",
+      "target-type": "url"
+    },
+    {
+      "target-type": "url",
+      "source-credit": "",
+      "type-id": "e8571dcc-35d4-4e91-a577-a3382fd84460",
+      "attribute-ids": {},
+      "attribute-values": {},
+      "url": {
+        "resource": "http://viaf.org/viaf/153696453",
+        "id": "02007e04-2303-4800-ac3c-b6ed9f79c795"
+      },
+      "end": null,
+      "type": "VIAF",
+      "begin": null,
+      "attributes": [],
+      "direction": "forward",
+      "target-credit": "",
+      "ended": false
+    },
+    {
+      "url": {
+        "id": "b722d6f9-6b82-4c3a-a8e4-cce9308cda06",
+        "resource": "https://www.wikidata.org/wiki/Q846373"
+      },
+      "end": null,
+      "type": "wikidata",
+      "type-id": "689870a4-a1e4-4912-b17f-7b2664215698",
+      "attribute-ids": {},
+      "attribute-values": {},
+      "target-credit": "",
+      "ended": false,
+      "begin": null,
+      "attributes": [],
+      "direction": "forward",
+      "target-type": "url",
+      "source-credit": ""
+    },
+    {
+      "target-credit": "",
+      "ended": false,
+      "begin": null,
+      "direction": "forward",
+      "attributes": [],
+      "url": {
+        "resource": "https://en.wikipedia.org/wiki/The_Temptations",
+        "id": "db030665-dcdb-4941-9845-c6a6b38d6640"
+      },
+      "end": null,
+      "type": "wikipedia",
+      "type-id": "29651736-fa6d-48e4-aadc-a557c6add1cb",
+      "attribute-ids": {},
+      "attribute-values": {},
+      "target-type": "url",
+      "source-credit": ""
+    },
+    {
+      "target-type": "url",
+      "source-credit": "",
+      "target-credit": "",
+      "ended": false,
+      "begin": null,
+      "attributes": [],
+      "direction": "forward",
+      "url": {
+        "resource": "https://www.youtube.com/channel/UCee8VNCWfOCYccbFhDM8B_A",
+        "id": "48d5ffcd-8d11-4367-a388-c5429259d5c7"
+      },
+      "type": "youtube",
+      "end": null,
+      "attribute-ids": {},
+      "attribute-values": {},
+      "type-id": "6a540e5b-58c6-4192-b6ba-dbc71ec8fcf0"
+    }
+  ],
+  "life-span": {
+    "end": null,
+    "begin": "1960",
+    "ended": false
+  },
+  "begin-area": {
+    "name": "Detroit",
+    "id": "b03ff310-d8e2-45cf-9455-769f76641eb2",
+    "disambiguation": "",
+    "sort-name": "Detroit"
+  },
+  "type": "Group",
+  "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+  "country": "US",
+  "end-area": null,
+  "sort-name": "Temptations, The",
+  "gender-id": null,
+  "id": "d8df96ae-8fcf-4997-b3e6-e5d1aaf0f69e",
+  "release-groups": [
+    {
+      "secondary-type-ids": [],
+      "id": "709f599f-f9c6-3d39-b97c-ed058f95c732",
+      "first-release-date": "1964-03-20",
+      "title": "Meet The Temptations",
+      "secondary-types": [],
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "disambiguation": "",
+      "primary-type": "Album"
+    }
+  ],
+  "isnis": [
+    "0000000115041997"
+  ],
+  "name": "The Temptations",
+  "area": {
+    "iso-3166-1-codes": [
+      "US"
+    ],
+    "name": "United States",
+    "id": "489ce91b-6658-3307-9877-795b68554c98",
+    "sort-name": "United States",
+    "disambiguation": ""
+  }
+}
