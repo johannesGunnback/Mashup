@@ -20,6 +20,13 @@ import static se.jg.mashup.config.CacheConfiguration.CACHE_MANAGER;
 @Service
 public class DescriptionRestClient extends AbstractRestClient {
 
+    private static final String ACTION = "action";
+    private static final String FORMAT = "format";
+    private static final String PROP = "prop";
+    private static final String EXINTRO = "exintro";
+    private static final String REDIRECTS = "redirects";
+    private static final String TITLES = "titles";
+
     public DescriptionRestClient(RestTemplate restTemplate, URLConfigProperties URLConfigProperties) throws URISyntaxException {
         super(restTemplate, new EndpointBuilder(URLConfigProperties.getWikipediaUrl()));
     }
@@ -27,12 +34,12 @@ public class DescriptionRestClient extends AbstractRestClient {
     @Cacheable(value = "longTerm", key = "'descriptionId_' + #descriptionId", cacheManager = CACHE_MANAGER)
     public String getDescription(String descriptionId) {
         UriComponents uriComponents = endpointBuilder.getBuilder("")
-                .queryParam("action", "query")
-                .queryParam("format","json")
-                .queryParam("prop","extracts")
-                .queryParam("exintro",true)
-                .queryParam("redirects",true) //TODO not sure if this is needed
-                .queryParam("titles",descriptionId)
+                .queryParam(ACTION, "query")
+                .queryParam(FORMAT,"json")
+                .queryParam(PROP,"extracts")
+                .queryParam(EXINTRO,true)
+                .queryParam(REDIRECTS,true) //TODO not sure if this is needed
+                .queryParam(TITLES,descriptionId)
                 .build();
         DescriptionResponse response = callEndpoint(uriComponents.toUriString());
         return parseResponse(response);

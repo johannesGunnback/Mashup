@@ -20,6 +20,11 @@ import static se.jg.mashup.config.CacheConfiguration.CACHE_MANAGER;
 @Service
 public class DescriptionIdLookupRestClient extends AbstractRestClient {
 
+    private static final String ACTION = "action";
+    private static final String IDS = "ids";
+    private static final String FORMAT = "format";
+    private static final String PROPS = "props";
+
     public DescriptionIdLookupRestClient(RestTemplate restTemplate, URLConfigProperties URLConfigProperties) throws URISyntaxException {
         super(restTemplate, new EndpointBuilder(URLConfigProperties.getWikidataUrl()));
     }
@@ -28,10 +33,10 @@ public class DescriptionIdLookupRestClient extends AbstractRestClient {
     public Optional<String> lookupDescriptionId(String linkId) {
         acquireRateLimit(); // Did not find any notice of lookouts for wikidata but will use the same constraints to be safe.
         UriComponents uriComponents = endpointBuilder.getBuilder("")
-                .queryParam("action", "wbgetentities")
-                .queryParam("ids", linkId)
-                .queryParam("format", "json")
-                .queryParam("props", "sitelinks")
+                .queryParam(ACTION, "wbgetentities")
+                .queryParam(IDS, linkId)
+                .queryParam(FORMAT, "json")
+                .queryParam(PROPS, "sitelinks")
                 .build();
         LookupResponse lookupResponse = callEndpoint(uriComponents.toUriString());
         return parseResponse(linkId, lookupResponse);
