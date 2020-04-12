@@ -20,7 +20,3 @@ Here are two mbid examples that could be used for testing:
 * 5b11f4ce-a62d-471e-81fc-a69a8278c7da
 * d8df96ae-8fcf-4997-b3e6-e5d1aaf0f69e (Should bypass wikidata)
 
-TODO check list
-- 
-* Look over error handling
-* Look over logging

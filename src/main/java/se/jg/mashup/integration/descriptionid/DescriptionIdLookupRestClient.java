@@ -1,5 +1,6 @@
 package se.jg.mashup.integration.descriptionid;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 import static se.jg.mashup.config.CacheConfiguration.CACHE_MANAGER;
 
+@Slf4j
 @Service
 public class DescriptionIdLookupRestClient extends AbstractRestClient {
 
@@ -31,11 +33,27 @@ public class DescriptionIdLookupRestClient extends AbstractRestClient {
                 .queryParam("format", "json")
                 .queryParam("props", "sitelinks")
                 .build();
-        LookupResponse lookupResponse = restTemplate.getForObject(uriComponents.toUriString(), LookupResponse.class);
+        LookupResponse lookupResponse = callEndpoint(uriComponents.toUriString());
+        return parseResponse(linkId, lookupResponse);
+    }
+
+    private Optional<String> parseResponse(String linkId, LookupResponse lookupResponse) {
+        if(lookupResponse == null) {
+            return Optional.empty();
+        }
         LookupEntity lookupEntity = lookupResponse.getEntities().get(linkId);
         if (lookupEntity == null || lookupEntity.getSitelinks() == null || lookupEntity.getSitelinks().getEnwiki() == null) {
             return Optional.empty();
         }
         return Optional.of(lookupEntity.getSitelinks().getEnwiki().getTitle());
+    }
+
+    private LookupResponse callEndpoint(String uri) {
+        try {
+            return restTemplate.getForObject(uri, LookupResponse.class);
+        } catch (Exception e) {
+            log.error("Failed to fetch description id");
+            return null;
+        }
     }
 }

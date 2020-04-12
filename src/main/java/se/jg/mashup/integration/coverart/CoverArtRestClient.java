@@ -2,10 +2,8 @@ package se.jg.mashup.integration.coverart;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import se.jg.mashup.config.URLConfigProperties;
@@ -35,21 +33,20 @@ public class CoverArtRestClient extends AbstractRestClient {
         UriComponents uriComponents = endpointBuilder.getBuilder(RELEASE_GROUP_RESOURCE).buildAndExpand(coverArtMbid);
         try {
             CoverArtResponse coverArtResponse = restTemplate.getForObject(uriComponents.toUriString(), CoverArtResponse.class);
-            if(coverArtResponse == null || coverArtResponse.getImages().isEmpty()){
-                log.warn("could not find cover art for id: {}", coverArtMbid);
-                return CompletableFuture.completedFuture(CoverArt.builder().build());
-            }
-            CoverArt coverArt = coverArtResponse.getImages().stream().findFirst().orElse(CoverArt.builder().build());
-            coverArt.setCoverArtMbid(coverArtMbid);
-            return CompletableFuture.completedFuture(coverArt);
-        } catch (HttpClientErrorException e) {
-            if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-                log.warn("could not find cover art for id: {}", coverArtMbid);
-                return CompletableFuture.completedFuture(CoverArt.builder().build());
-            }
-            log.error(e.getMessage());
-            return CompletableFuture.failedFuture(e);
+            return parseResponse(coverArtMbid, coverArtResponse);
+        } catch (Exception e) {
+            log.warn("could not find cover art for id: {}", coverArtMbid);
+            return CompletableFuture.completedFuture(CoverArt.builder().build());
         }
+    }
 
+    private CompletableFuture<CoverArt> parseResponse(String coverArtMbid, CoverArtResponse coverArtResponse) {
+        if (coverArtResponse == null || coverArtResponse.getImages().isEmpty()) {
+            log.warn("could not find cover art for id: {}", coverArtMbid);
+            return CompletableFuture.completedFuture(CoverArt.builder().build());
+        }
+        CoverArt coverArt = coverArtResponse.getImages().stream().findFirst().orElse(CoverArt.builder().build());
+        coverArt.setCoverArtMbid(coverArtMbid);
+        return CompletableFuture.completedFuture(coverArt);
     }
 }

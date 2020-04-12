@@ -1,5 +1,6 @@
 package se.jg.mashup.integration.description;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 import static se.jg.mashup.config.CacheConfiguration.CACHE_MANAGER;
 
+@Slf4j
 @Service
 public class DescriptionRestClient extends AbstractRestClient {
 
@@ -32,15 +34,24 @@ public class DescriptionRestClient extends AbstractRestClient {
                 .queryParam("redirects",true) //TODO not sure if this is needed
                 .queryParam("titles",descriptionId)
                 .build();
-        DescriptionResponse response = restTemplate.getForObject(uriComponents.toUriString(), DescriptionResponse.class);
+        DescriptionResponse response = callEndpoint(uriComponents.toUriString());
+        return parseResponse(response);
+    }
+
+    private String parseResponse(DescriptionResponse response) {
         if (response == null || response.getQuery() == null) {
             return null;
         }
         Optional<Page> firstPage = response.getQuery().getPages().values().stream().findFirst(); // We are only interested in the first description we find.
-        if(!firstPage.isPresent()) {
+        return firstPage.map(Page::getExtract).orElse(null);
+    }
+
+    private DescriptionResponse callEndpoint(String uri) {
+        try {
+            return restTemplate.getForObject(uri, DescriptionResponse.class);
+        } catch (Exception e) {
+            log.error("Failed to fetch description");
             return null;
         }
-        return firstPage.get().getExtract();
-
     }
 }
